@@ -7,8 +7,8 @@ from jesse.store import store
 def test_routes():
     # re-define routes
     router.set_routes([
-        (exchanges.BITFINEX, 'ETHUSD', timeframes.HOUR_3, 'Test19', 0.5),
-        (exchanges.SANDBOX, 'BTCUSD', timeframes.MINUTE_15, 'Test19', 0.5),
+        (exchanges.BITFINEX, 'ETHUSD', timeframes.HOUR_3, 'Test19'),
+        (exchanges.SANDBOX, 'BTCUSD', timeframes.MINUTE_15, 'Test19'),
     ])
 
     router.set_extra_candles([

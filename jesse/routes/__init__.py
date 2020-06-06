@@ -8,15 +8,16 @@ class RouterClass:
         self.market_data = []
 
     def set_routes(self, routes):
+
+        import jesse.helpers as jh
+        from jesse import exceptions
+
         self.routes = []
 
         total_weight = 0
 
         for r in routes:
             # validate strategy
-            import jesse.helpers as jh
-            from jesse import exceptions
-
             strategy_name = r[3]
             if jh.is_unit_testing():
                 exists = jh.file_exists('jesse/strategies/{}/__init__.py'.format(strategy_name))
@@ -34,24 +35,25 @@ class RouterClass:
                     'Timeframe "{}" is invalid. Supported timeframes are 1m, 3m, 5m, 15m, 30m, 1h, 2h, 3h, 4h, 6h, 8h, 1D'.format(
                         timeframe)
                 )
+            if not jh.is_unit_testing():
+                # validate weights
+                weight = r[4]
+                if weight > 1 or weight < 0:
+                    raise exceptions.InvalidRoutes(
+                        'Weight "{}" is invalid. Supported are values between 0 and 1'.format(
+                            weight)
+                    )
 
-            # validate weights
-            weight = r[4]
-            if weight > 1 or weight < 0:
-                raise exceptions.InvalidRoutes(
-                    'Weight "{}" is invalid. Supported are values between 0 and 1'.format(
-                        weight)
-                )
-
-            total_weight += weight
+                total_weight += weight
 
             self.routes.append(Route(*r))
 
-        if total_weight > 1 or total_weight==0:
-            raise exceptions.InvalidRoutes(
-                'Total weight of all routes is "{}". Supported are values greater 0 and smaller 1'.format(
-                    total_weight)
-            )
+        if not jh.is_unit_testing():
+            if total_weight > 1 or total_weight == 0:
+                raise exceptions.InvalidRoutes(
+                    'Total weight of all routes is "{}". Supported are values greater 0 and smaller 1'.format(
+                        total_weight)
+                )
 
     def set_market_data(self, routes):
         self.market_data = []
