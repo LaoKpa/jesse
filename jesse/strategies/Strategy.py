@@ -24,6 +24,7 @@ class Strategy(ABC):
         self.symbol = None
         self.exchange = None
         self.timeframe = None
+        self.weight = None
         self.hp = None
 
         self.index = 0
@@ -329,20 +330,20 @@ class Strategy(ABC):
                     "(no parentheses must be present at the end)"
                     "\n\n"
                     u"\u274C " + "Incorrect Example:\n"
-                    "return [\n"
-                    "    self.filter_1()\n"
-                    "]\n\n"
-                    u"\u2705 " + "Correct Example:\n"
-                    "return [\n"
-                    "    self.filter_1\n"
-                    "]\n"
+                                 "return [\n"
+                                 "    self.filter_1()\n"
+                                 "]\n\n"
+                                 u"\u2705 " + "Correct Example:\n"
+                                              "return [\n"
+                                              "    self.filter_1\n"
+                                              "]\n"
                 )
 
             if passed == False:
                 logger.info(f.__name__)
                 self._reset()
                 return False
-        
+
         return True
 
     @abstractmethod
@@ -1016,7 +1017,7 @@ class Strategy(ABC):
     @property
     def capital(self):
         """the current capital in the trading exchange"""
-        return selectors.get_exchange(self.exchange).balance
+        return selectors.get_exchange(self.exchange).balance * self.weight
 
     def _log_position_update(self, order: Order, role: str):
         """

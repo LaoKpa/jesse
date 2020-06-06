@@ -10,6 +10,8 @@ class RouterClass:
     def set_routes(self, routes):
         self.routes = []
 
+        total_weight = 0
+
         for r in routes:
             # validate strategy
             import jesse.helpers as jh
@@ -33,7 +35,23 @@ class RouterClass:
                         timeframe)
                 )
 
+            # validate weights
+            weight = r[4]
+            if weight > 1 or weight < 0:
+                raise exceptions.InvalidRoutes(
+                    'Weight "{}" is invalid. Supported are values between 0 and 1'.format(
+                        weight)
+                )
+
+            total_weight += weight
+
             self.routes.append(Route(*r))
+
+        if total_weight > 1 or total_weight==0:
+            raise exceptions.InvalidRoutes(
+                'Total weight of all routes is "{}". Supported are values greater 0 and smaller 1'.format(
+                    total_weight)
+            )
 
     def set_market_data(self, routes):
         self.market_data = []

@@ -159,6 +159,7 @@ def simulator(candles, hyper_parameters=None):
         r.strategy.exchange = r.exchange
         r.strategy.symbol = r.symbol
         r.strategy.timeframe = r.timeframe
+        r.strategy.weight = r.weight
 
         # init few objects that couldn't be initiated in Strategy __init__
         r.strategy._init_objects()
